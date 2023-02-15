@@ -1,7 +1,8 @@
-export default defineEventHandler(async req => {
-	const body = await readBody(req)
-	console.log(body)
-	return {
-		message: body
-	}
+import { serverSupabaseClient } from '#supabase/server'
+
+export default defineEventHandler(async event => {
+	const body = await readBody(event)
+	const client: any = serverSupabaseClient(event)
+	const { error } = await client.from('list').insert({ title: body.title, status: false })
+	return { success: error }
 })
